@@ -8,29 +8,24 @@ app.set("views", "./views");
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-    // res.write('hello world');
-    // res.end();
+    res.render('home');
 
-    // res.send("<h1>Hello world</h1>");
-    
-    res.sendFile("./views/home.html", {root: __dirname});
 });
 
 app.get('/about', (req, res) => {
-    res.sendFile("./views/about.html", {root: __dirname});
+    res.render("about");
 });
 
-app.get('/about-us', (req, res) => {
-    res.redirect("/about");
-});
+// app.get('/about-us', (req, res) => {
+//     res.redirect("/about");
+// });
 
 app.get('/contact', (req, res) => {
-    res.sendFile("./views/contact.html", {root: __dirname});
+    res.render("contact");
 });
 
 app.use((req, res) => {
-    res.status(404);
-    res.sendFile('./views/404.html', {root: __dirname});
+    res.status(404).render("404");
 });
 
 app.listen(3000, () => {
