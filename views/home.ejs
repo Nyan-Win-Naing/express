@@ -6,13 +6,19 @@
     <title>Document</title>
   </head>
   <body>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/about">About</a>
-      <a href="/contact">Contact</a>
-    </nav>
 
-    <h1>Home Page update</h1>
-    <p>This is html file</p>
+    <%- include("./components/navbar.ejs") %>
+
+    <!-- secure -->
+    <%- "<h1>Hello World</h1>"  %>
+
+    <% if(blogs.length) { %>
+      <% blogs.forEach(blog => { %>
+        <h1><%= blog.title %></h1>
+        <p><%= blog.intro %></p>
+      <% }) %>
+    <% } else { %>
+      <h3>No Blogs Found.</h3>
+    <% } %>
   </body>
 </html>
