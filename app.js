@@ -26,6 +26,7 @@ app.set("view engine", "ejs");
 // app.use(logger());
 
 app.use(morgan('dev'));
+app.use(express.static('public'));
 
 app.get("/", (req, res) => {
   let blogs = [
