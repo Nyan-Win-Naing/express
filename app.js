@@ -1,18 +1,31 @@
 // console.log("app is running");
 
 const express = require("express");
+let morgan = require("morgan")
 
 const app = express();
 
 app.set("views", "./views");
 app.set("view engine", "ejs");
 
-app.use((req, res, next) => {
-  console.log("first middleware is running");
-  next();
-});
+// let logger = (req, res, next) => {
+//   console.log(`${req.method} ${req.originalUrl} --`);
+//   next();
+// };
 
+// let logger = (env) => {
+//   return (req, res, next) => {
+//     if(env === 'dev') {
+//       console.log(`${req.method} ${req.originalUrl} --`);
+//     }
+      
+//     next();
+//   };
+// };
 
+// app.use(logger());
+
+app.use(morgan('dev'));
 
 app.get("/", (req, res) => {
   let blogs = [
@@ -35,19 +48,14 @@ app.get("/", (req, res) => {
     // age: 22,
     // blogs: blogs,
     blogs,
-    title: "Home"
+    title: "Home",
   });
 });
 
 app.get("/about", (req, res) => {
   res.render("about", {
-    title: "About"
+    title: "About",
   });
-});
-
-app.use((req, res, next) => {
-  console.log("second middleware is running");
-  next();
 });
 
 // app.get('/about-us', (req, res) => {
@@ -56,13 +64,13 @@ app.use((req, res, next) => {
 
 app.get("/contact", (req, res) => {
   res.render("contact", {
-    title: 'Contact'
+    title: "Contact",
   });
 });
 
 app.use((req, res) => {
   res.status(404).render("404", {
-    title: "404 Not Found"
+    title: "404 Not Found",
   });
 });
 
