@@ -103,6 +103,17 @@ app.get("/blogs/:id", async (req, res, next) => {
   }
 });
 
+app.post("/blogs/:id/delete", async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    await Blog.findByIdAndDelete(id);
+    res.redirect("/");
+  } catch (e) {
+    console.log(e);
+    next();
+  }
+});
+
 app.use((req, res) => {
   res.status(404).render("404", {
     title: "404 Not Found",
