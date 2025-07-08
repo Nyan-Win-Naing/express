@@ -45,9 +45,15 @@ app.get("/add-blog", async (req, res) => {
   res.send("blog saved");
 });
 
-app.get("/single-blog", async (req, res) => {
-  let blog = await Blog.findById("686bed88b4d585862f308e10");
-  res.json(blog);
+app.get("/blogs/:id", async (req, res) => {
+  let id = req.params.id;
+  let blog = await Blog.findById(id);
+  // res.json(blog);
+
+  res.render("blogs/show", {
+    blog,
+    title: "Blog Detail",
+  });
 });
 
 app.get("/", async (req, res) => {
