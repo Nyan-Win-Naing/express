@@ -4,6 +4,7 @@ const express = require("express");
 let morgan = require("morgan");
 const mongoose = require("mongoose");
 const expressLayouts = require("express-ejs-layouts");
+const blogRoutes = require("./routes/blogRoutes");
 
 const Blog = require("./models/Blog");
 
@@ -46,27 +47,7 @@ app.get("/add-blog", async (req, res) => {
 });
 
 app.get("/", async (req, res) => {
-  let blogs = await Blog.find().sort({ createdAt: -1 });
-
-  console.log(blogs);
-
-  res.render("home", {
-    blogs,
-    title: "Home",
-  });
-});
-
-app.post("/blogs", async (req, res) => {
-  let { title, intro, body } = req.body;
-
-  let blog = new Blog({
-    title,
-    intro,
-    body,
-  });
-  await blog.save();
-
-  res.redirect("/");
+  res.redirect("/blogs");
 });
 
 app.get("/about", (req, res) => {
@@ -81,38 +62,7 @@ app.get("/contact", (req, res) => {
   });
 });
 
-app.get("/blogs/create", (req, res) => {
-  res.render("blogs/create", {
-    title: "Blog Create",
-  });
-});
-
-app.get("/blogs/:id", async (req, res, next) => {
-  try {
-    let id = req.params.id;
-    let blog = await Blog.findById(id);
-    // res.json(blog);
-
-    res.render("blogs/show", {
-      blog,
-      title: "Blog Detail",
-    });
-  } catch (e) {
-    console.log(e);
-    next();
-  }
-});
-
-app.post("/blogs/:id/delete", async (req, res, next) => {
-  try {
-    let id = req.params.id;
-    await Blog.findByIdAndDelete(id);
-    res.redirect("/");
-  } catch (e) {
-    console.log(e);
-    next();
-  }
-});
+app.use("/blogs", blogRoutes);
 
 app.use((req, res) => {
   res.status(404).render("404", {
