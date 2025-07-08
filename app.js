@@ -5,9 +5,11 @@ let morgan = require("morgan");
 const mongoose = require("mongoose");
 const expressLayouts = require("express-ejs-layouts");
 
-const Blog = require('./models/Blog');
+const Blog = require("./models/Blog");
 
 const app = express();
+
+app.use(express.urlencoded({ extended: true }));
 
 // db url
 let mongoUrl =
@@ -30,27 +32,10 @@ app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.set("layout", "layouts/default");
 
-// let logger = (req, res, next) => {
-//   console.log(`${req.method} ${req.originalUrl} --`);
-//   next();
-// };
-
-// let logger = (env) => {
-//   return (req, res, next) => {
-//     if(env === 'dev') {
-//       console.log(`${req.method} ${req.originalUrl} --`);
-//     }
-
-//     next();
-//   };
-// };
-
-// app.use(logger());
-
 app.use(morgan("dev"));
 app.use(express.static("public"));
 
-app.get('/add-blog', async (req, res) => {
+app.get("/add-blog", async (req, res) => {
   let blog = new Blog({
     title: "blog title 3",
     intro: "blog intro 3",
@@ -60,24 +45,33 @@ app.get('/add-blog', async (req, res) => {
   res.send("blog saved");
 });
 
-app.get('/single-blog', async (req, res) => {
+app.get("/single-blog", async (req, res) => {
   let blog = await Blog.findById("686bed88b4d585862f308e10");
   res.json(blog);
 });
 
 app.get("/", async (req, res) => {
-
-  let blogs = await Blog.find().sort({createdAt: -1});
+  let blogs = await Blog.find().sort({ createdAt: -1 });
 
   console.log(blogs);
 
   res.render("home", {
-    // name: "mgmg",
-    // age: 22,
-    // blogs: blogs,
     blogs,
     title: "Home",
   });
+});
+
+app.post("/blogs", async (req, res) => {
+  let { title, intro, body } = req.body;
+
+  let blog = new Blog({
+    title,
+    intro,
+    body,
+  });
+  await blog.save();
+
+  res.redirect("/");
 });
 
 app.get("/about", (req, res) => {
@@ -85,10 +79,6 @@ app.get("/about", (req, res) => {
     title: "About",
   });
 });
-
-// app.get('/about-us', (req, res) => {
-//     res.redirect("/about");
-// });
 
 app.get("/contact", (req, res) => {
   res.render("contact", {
